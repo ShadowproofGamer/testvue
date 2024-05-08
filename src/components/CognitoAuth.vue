@@ -14,7 +14,8 @@ Amplify.configure(awsconfig);
   <authenticator>
     <template v-slot="{ user, signOut }">
       <h1>Hello {{ user.username }}!</h1>
-      <Game :username="user.username"></Game>
+      <p>{{user}}</p>
+      <Game :username="user.username" :userGUID="user.userId"></Game>
       <button @click="signOut">Sign Out</button>
     </template>
   </authenticator>

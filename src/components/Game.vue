@@ -15,10 +15,10 @@ const WINNING_COMBINATIONS = [
   [2, 4, 6]
 ];
 export default {
-  props: ['username'],
-  setup(props) {
-    console.log(props.username);
-  },
+  props: ['username', 'userGUID'],
+  // setup(props) {
+  //   console.log(props.username);
+  // },
   name: "Game",
   // el: '#app',
   data() {
@@ -29,7 +29,6 @@ export default {
       gameActive: false,
       cells: Array(9).fill(''),
       statusDisplay: '',
-      userGUID: null,
       stompClient: null,
       roomConnection: null,
       roomNumber: null,
@@ -55,12 +54,12 @@ export default {
 
     onConnected() {
       // Subscribe to the Public Topic
-      this.personalConnection = this.stompClient.subscribe('/topic/' + this.username, this.onMessageReceived);
+      this.personalConnection = this.stompClient.subscribe('/topic/' + this.userGUID, this.onMessageReceived);
 
       // Tell your username to the server
       this.stompClient.send("/app/topic/login",
           {},
-          JSON.stringify({type: 'LOGIN', username: this.username, content: "Want to join"})
+          JSON.stringify({type: 'LOGIN', username: this.userGUID, content: "Want to join"})
       )
       this.cells = Array(9).fill(''); // Reset cells
       this.statusDisplay = 'Waiting for game...';
@@ -101,10 +100,10 @@ export default {
 
 
       if (message.type === 'LOGIN') {
-        this.userGUID = message.username;
-        this.personalConnection.unsubscribe()
-        this.personalConnection = this.stompClient.subscribe('/topic/' + this.userGUID, this.onMessageReceived)
-        console.log(message.username + ' joined!');
+        // this.userGUID = message.username;
+        // this.personalConnection.unsubscribe()
+        // this.personalConnection = this.stompClient.subscribe('/topic/' + this.userGUID, this.onMessageReceived)
+        // console.log(message.username + ' joined!');
 
 
         // Tell the server, that you want to start a game
